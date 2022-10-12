@@ -1,4 +1,6 @@
-﻿using LibraryManagementApp.Models;
+﻿using LibraryManagementApp.Data.Interfaces;
+using LibraryManagementApp.Models;
+using LibraryManagementApp.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,27 +13,35 @@ namespace LibraryManagementApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IBookRepository _bookRepository;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IAuthorRepository _authorRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IBookRepository bookRepository,
+            ICustomerRepository customerRepository,
+            IAuthorRepository authorRepository
+            )
         {
-            _logger = logger;
+            _bookRepository = bookRepository;
+            _customerRepository = customerRepository;
+            _authorRepository = authorRepository;
         }
 
         public IActionResult Index()
         {
-            return View();
+
+            //create home view model
+            var homeVM = new HomeViewModel()
+            {
+                AuthorCount = _authorRepository.Count(x => true),
+                BookCount = _bookRepository.Count(x => true),
+                CustomerCount = _customerRepository.Count(x => true),
+                LendBookCount = _bookRepository.Count(x => x.Borrower != null)
+            };
+
+            //call view
+            return View(homeVM);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

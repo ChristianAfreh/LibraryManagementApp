@@ -27,6 +27,7 @@ namespace LibraryManagement.Controllers
 
         public IActionResult Update(int id)
         {
+
             var author = _authorRepository.GetById(id);
 
             if (author == null) return NotFound();
@@ -41,6 +42,10 @@ namespace LibraryManagement.Controllers
             {
                 return View(author);
             }
+            if (!ModelState.IsValid)
+            {
+                return View(author);
+            }
 
             _authorRepository.Update(author);
 
@@ -49,28 +54,26 @@ namespace LibraryManagement.Controllers
 
         public IActionResult Create()
         {
-            //var viewModel = new CreateAuthorViewModel
-            //{ Referer = Request.Headers["Referer"].ToString() };
+            var viewModel = new CreateAuthorViewModel
+            { Referer = Request.Headers["Referer"].ToString() };
 
-            return View();
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Create(Author author)
+        public IActionResult Create(CreateAuthorViewModel authorVM)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(authorVM);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return View(authorVM);
+            }
 
-            //_authorRepository.Create(authorVM.Author);
+            _authorRepository.Create(authorVM.Author);
 
-            //if (!String.IsNullOrEmpty(authorVM.Referer))
-            //{
-            //    return Redirect(authorVM.Referer);
-            //}
-            _authorRepository.Create(author);
-
+            if (!String.IsNullOrEmpty(authorVM.Referer))
+            {
+                return Redirect(authorVM.Referer);
+            }
             return RedirectToAction("List");
         }
 

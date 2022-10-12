@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model HomeViewModel
+@{
+    int availableBooks = Model.BookCount - Model.LendBookCount;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>Library Management Dashboard</h1>
+
+<div class="row">
+    <div class="col-md-6" style="padding:10px">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><strong>Customers Count</strong></span>
+            </div>
+            <div class="card-body">
+                There are <strong>@Model.CustomerCount</strong>  customers
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6" style="padding:10px">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title"><strong>Authors Count</strong></span>
+            </div>
+            <div class="card-body">
+                There are <strong>@Model.AuthorCount</strong> authors
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6" style="padding:10px">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-head"><strong>Books Count</strong></span>
+            </div>
+            <div class="card-body">
+                There are <strong>@availableBooks</strong> books available out of <strong>@Model.BookCount</strong> books
+            </div>
+        </div>
+    </div>
 </div>
